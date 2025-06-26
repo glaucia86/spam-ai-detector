@@ -142,8 +142,9 @@ export class SpamDetector {
               { role: "system", content: systemPrompt },
               { role: "user", content: userPrompt }
             ],
-            temperature: 1.0,
-            max_tokens: 100,  
+            temperature: 0.1,
+            top_p: 0.9,
+            max_tokens: 300,  
             model: this.modelName,
           }
         });
