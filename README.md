@@ -4,7 +4,7 @@ This project came about after analyzing a Python spam detection code that had se
 
 ## What was wrong with the original code?
 
-The original Python (you can see [the code here](../resource/python-code.py)) code was pretty simple, but had massive holes that would cause headaches in production:
+The original Python (you can see [the code here](https://github.com/glaucia86/spam-detector-ai/blob/main/resource/python-code.py) code was pretty simple, but had massive holes that would cause headaches in production:
 
 ### Problem #1: Zero error handling
 
