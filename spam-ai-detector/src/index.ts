@@ -17,7 +17,7 @@ interface SpamAnalysisResponse {
 }
 
 export class SpamDetector {
-  private client: any;
+  private client: ReturnType<typeof ModelClient>;
   private modelName: string;
   private logger: Console;
 
@@ -83,12 +83,12 @@ export class SpamDetector {
     Respond only with the JSON in the specified format:`;
   }
 
-  private isValidResponse(data: any): data is SpamAnalysisResponse {
+  private isValidResponse(data: unknown): data is SpamAnalysisResponse {
     return (
       typeof data === 'object' &&
       data !== null &&
-      typeof data.is_spam === 'boolean' &&
-      typeof data.reason === 'string'
+      typeof (data as SpamAnalysisResponse).is_spam === 'boolean' &&
+      typeof (data as SpamAnalysisResponse).reason === 'string'
     );
   }
 
