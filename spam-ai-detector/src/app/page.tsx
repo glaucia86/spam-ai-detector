@@ -46,4 +46,48 @@ export default function HomePage() {
       setLoading(false);
     }
   }
+
+  return (
+    <div className="container mx-auto p-4 max-w-2xl">
+      <h1 className="text-3xl font-bold mb-6">Spam Email Detector</h1>
+      
+      <div className="mb-4">
+        <label htmlFor="email" className="block text-sm font-medium mb-2">
+          Email Content
+        </label>
+        <textarea
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-3 border rounded-lg min-h-[200px]"
+          placeholder="Paste your email content here..."
+        />
+      </div>
+
+      <button
+        onClick={analyzeEmail}
+        disabled={loading}
+        className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 disabled:opacity-50"
+      >
+        {loading ? 'Analyzing...' : 'Analyze Email'}
+      </button>
+
+      {error && (
+        <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      {result && (
+        <div className={`mt-4 p-4 rounded-lg ${result.isSpam ? 'bg-red-100' : 'bg-green-100'}`}>
+          <h2 className="text-xl font-semibold mb-2">
+            {result.isSpam ? '⚠️ Spam Detected' : '✅ Not Spam'}
+          </h2>
+          <p className="mb-1"><strong>Reason:</strong> {result.reason}</p>
+          <p className="mb-1"><strong>Confidence:</strong> {(result.confidence * 100).toFixed(1)}%</p>
+          <p className="text-sm text-gray-600">Analyzed at: {new Date(result.timestamp).toLocaleString()}</p>
+        </div>
+      )}
+    </div>
+  );
 };
