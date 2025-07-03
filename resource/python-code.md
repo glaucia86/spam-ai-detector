@@ -1,6 +1,7 @@
 # 1. What problems do you see with this code?
 # 2. What ideas do you have to make it better?
 
+```python
 def check_spam(email: str) -> str | None:
     prompt = f"""\
 Determine if the email is spam.PermissionError
@@ -25,4 +26,4 @@ email = "hi how r u bro i have million dollar deal just sign here"
 res = check_spam(email)
 if res:
     print(json.dumps(json.loads(res), indent=2))
-    
+```
