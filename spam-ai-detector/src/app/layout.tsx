@@ -5,9 +5,9 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Spam AI Detector - Advanced Email Security',
-  description: 'AI-powered spam detection for email security. Analyze emails instantly with high accuracy.',
-  keywords: ['spam-detection', 'email-security', 'AI', 'machine-learning', 'spam-filter'],
+  title: 'Detector de Spam com IA - Segurança Avançada de Email',
+  description: 'Detector de spam alimentado por IA para segurança de email. Analise emails instantaneamente com alta precisão usando algoritmos de aprendizado de máquina.',
+  keywords: ['detecção-spam', 'segurança-email', 'IA', 'aprendizado-máquina', 'filtro-spam', 'análise-texto'],
 }
 
 export default function RootLayout({
