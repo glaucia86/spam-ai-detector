@@ -2,6 +2,13 @@
 
 This project came about after analyzing a Python spam detection code that had several serious issues. I decided to rewrite it in TypeScript using GitHub Models to show how to do it right.
 
+![](./resource/images/image_01.png)
+![](./resource/images/image_02.png)
+
+You can see the project in action in the gif below:
+
+![](./resource/images/spam_detector_ai.gif)
+
 ## What was wrong with the original code?
 
 The original Python (you can see [the code here](https://github.com/glaucia86/spam-detector-ai/blob/main/resource/python-code.py) code was pretty simple, but had massive holes that would cause headaches in production:
