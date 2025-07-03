@@ -17,7 +17,7 @@ export default function HomePage() {
 
   const analyzeEmail = async () => {
     if (!email.trim()) {
-      setError('Please insert the content of the email.');
+      setError('Por favor, insira o conteúdo do email.');
       return;
     }
 
@@ -25,7 +25,7 @@ export default function HomePage() {
     setError(null);
 
     try {
-      const response = await fetch('/spam-ai-detector/src/app/analyze/api', {
+      const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,15 +36,21 @@ export default function HomePage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to analyze email');
+        throw new Error(data.error || 'Falha ao analisar email');
       }
 
       setResult(data.data);
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+      setError(error instanceof Error ? error.message : 'Ocorreu um erro inesperado');
     } finally {
       setLoading(false);
     }
+  };
+
+  const setExampleEmail = (exampleText: string) => {
+    setEmail(exampleText);
+    setResult(null);
+    setError(null);
   };
 
   return (
@@ -58,11 +64,12 @@ export default function HomePage() {
         </div>
         
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          AI-powered Spam Detector
+          Detector de Spam com IA
         </h1>
         
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Advanced spam detection using machine learning algorithms to analyze text patterns and identify potential threats.
+          Detecção avançada de spam usando algoritmos de aprendizado de 
+          máquina para analisar padrões de texto e identificar ameaças potenciais
         </p>
       </div>
 
@@ -75,7 +82,7 @@ export default function HomePage() {
               <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <h2 className="text-xl font-semibold text-gray-900">Text Analysis</h2>
+              <h2 className="text-xl font-semibold text-gray-900">Análise de Texto</h2>
             </div>
             
             <div className="mb-6">
@@ -86,7 +93,7 @@ export default function HomePage() {
                 placeholder="Cole o conteúdo do seu email aqui..."
               />
               <div className="mt-2 text-sm text-gray-500">
-                {email.length} characters
+                {email.length} caracteres
               </div>
             </div>
 
@@ -101,10 +108,10 @@ export default function HomePage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Analyzing...
+                  Analisando...
                 </span>
               ) : (
-                'Analyze Email'
+                'Analisar Email'
               )}
             </button>
           </div>
@@ -152,14 +159,14 @@ export default function HomePage() {
                     <h3 className={`text-xl font-bold ${
                       result.isSpam ? 'text-red-800' : 'text-green-800'
                     }`}>
-                      {result.isSpam ? 'Spam Detected' : 'Looks Safe'}
+                      {result.isSpam ? 'Spam Detectado' : 'Parece Seguro'}
                     </h3>
                     <span className={`text-sm font-medium px-2 py-1 rounded-full ${
                       result.isSpam 
                         ? 'bg-red-200 text-red-800' 
                         : 'bg-green-200 text-green-800'
                     }`}>
-                      {result.isSpam ? 'HIGH RISK' : 'LOW RISK'}
+                      {result.isSpam ? 'RISCO ALTO' : 'RISCO BAIXO'}
                     </span>
                   </div>
                 </div>
@@ -167,7 +174,7 @@ export default function HomePage() {
                 <p className="text-gray-700 mb-4">{result.reason}</p>
                 
                 <div className="text-sm text-gray-600">
-                  Analyzed in: {new Date(result.timestamp).toLocaleString('pt-BR')}
+                  Analisado em: {new Date(result.timestamp).toLocaleString('pt-BR')}
                 </div>
               </div>
             </div>
@@ -175,7 +182,7 @@ export default function HomePage() {
             {/* Confidence Score */}
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-2xl shadow-lg border">
-                <h4 className="font-semibold text-gray-900 mb-4">Confidence Score</h4>
+                <h4 className="font-semibold text-gray-900 mb-4">Pontuação de Confiança</h4>
                 
                 <div className="text-center mb-4">
                   <div className="text-3xl font-bold text-gray-900">
@@ -194,18 +201,18 @@ export default function HomePage() {
                 
                 {result.isSpam && (
                   <div className="mt-4">
-                    <h5 className="font-medium text-gray-900 mb-3">Problems detected</h5>
+                    <h5 className="font-medium text-gray-900 mb-3">Problemas Detectados</h5>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Spam Keywords</span>
+                        <span className="text-sm text-gray-600">Palavras-chave de Spam</span>
                         <span className="text-sm font-medium text-red-600">90%</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Excessive Scoring</span>
+                        <span className="text-sm text-gray-600">Pontuação Excessiva</span>
                         <span className="text-sm font-medium text-orange-600">60%</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Urgency Language</span>
+                        <span className="text-sm text-gray-600">Linguagem de Urgência</span>
                         <span className="text-sm font-medium text-yellow-600">40%</span>
                       </div>
                     </div>
@@ -219,7 +226,7 @@ export default function HomePage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span className="text-sm text-green-800">
-                        No spam indicators detected. This text appears to be legitimate.
+                        Nenhum indicador de spam detectado. Este texto parece ser legítimo.
                       </span>
                     </div>
                   </div>
@@ -240,8 +247,8 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Real-Time Analysis</h3>
-              <p className="text-gray-600 text-sm">Instant processing using advanced AI algorithms</p>
+              <h3 className="font-semibold text-gray-900 mb-2">Análise em Tempo Real</h3>
+              <p className="text-gray-600 text-sm">Processamento instantâneo usando algoritmos avançados de IA</p>
             </div>
             
             <div className="text-center">
@@ -250,8 +257,8 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">MMultiple Indicators</h3>
-              <p className="text-gray-600 text-sm">Detailed analysis with multiple risk factors</p>
+              <h3 className="font-semibold text-gray-900 mb-2">Múltiplos Indicadores</h3>
+              <p className="text-gray-600 text-sm">Análise detalhada com múltiplos fatores de risco</p>
             </div>
             
             <div className="text-center">
@@ -260,8 +267,83 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Detailed Results</h3>
-              <p className="text-gray-600 text-sm">Clear explanations of the analysis results</p>
+              <h3 className="font-semibold text-gray-900 mb-2">Resultados Detalhados</h3>
+              <p className="text-gray-600 text-sm">Explicações claras sobre o resultado da análise</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Examples Section */}
+      <div className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Experimente estes exemplos:</h2>
+            <p className="text-gray-600">Clique em um dos exemplos abaixo para testar o detector</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Email Legítimo */}
+            <div 
+              className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer hover-scale"
+              onClick={() => setExampleEmail("Olá João, espero que esteja bem. Gostaria de dar seguimento à nossa reunião de ontem sobre o cronograma do projeto. Podemos agendar uma ligação para a próxima semana para discutir os próximos passos? Atenciosamente, Sarah")}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-gray-900">Email Legítimo</h3>
+              </div>
+              <p className="text-sm text-gray-600">
+                Olá João, espero que esteja bem. Gostaria de dar seguimento à nossa reunião...
+              </p>
+            </div>
+
+            {/* Exemplo de Spam */}
+            <div 
+              className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer hover-scale"
+              onClick={() => setExampleEmail("PARABÉNS!!! Você GANHOU R$ 1.000.000 na nossa INCRÍVEL loteria! CLIQUE AQUI AGORA para reivindicar seu prêmio antes que expire! Aja rápido - oferta por tempo limitado! Ligue 0800-123-4567 imediatamente! Esta oferta expira em 24 horas!")}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-gray-900">Exemplo de Spam</h3>
+              </div>
+              <p className="text-sm text-gray-600">
+                PARABÉNS!!! Você GANHOU R$ 1.000.000 na nossa INCRÍVEL loteria...
+              </p>
+            </div>
+
+            {/* Email de Marketing */}
+            <div 
+              className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer hover-scale"
+              onClick={() => setExampleEmail("Desconto especial só para você! Ganhe 20% de desconto na sua próxima compra. Frete grátis em pedidos acima de R$ 100. Clique aqui para comprar agora e economizar nos seus itens favoritos. Oferta por tempo limitado!")}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V1a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2a1 1 0 01-1-1V4M7 4H5a1 1 0 00-1 1v4a1 1 0 001 1h2a1 1 0 001-1V5a1 1 0 00-1-1z" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-gray-900">Email de Marketing</h3>
+              </div>
+              <p className="text-sm text-gray-600">
+                Desconto especial só para você! Ganhe 20% de desconto na sua próxima compra...
+              </p>
+            </div>
+          </div>
+          
+          <div className="mt-12 text-center">
+            <div className="inline-flex items-center gap-2 text-sm text-gray-500">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Clique em qualquer exemplo acima para testá-lo automaticamente
             </div>
           </div>
         </div>
