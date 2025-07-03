@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   html {
@@ -11,34 +13,6 @@
 }
 
 @layer components {
-  /* Custom button styles */
-  .btn-primary {
-    @apply bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors;
-  }
-  
-  .btn-secondary {
-    @apply bg-gray-100 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors;
-  }
-  
-  /* Custom form styles */
-  .form-input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent;
-  }
-  
-  .form-textarea {
-    @apply form-input resize-none;
-  }
-  
-  /* Custom card styles */
-  .card {
-    @apply bg-white rounded-lg shadow-sm border;
-  }
-  
-  .card-hover {
-    @apply card hover:shadow-md transition-shadow;
-  }
-  
-  /* Hover scale effect */
   .hover-scale {
     transition: transform 0.2s ease-in-out;
   }
@@ -49,7 +23,6 @@
 }
 
 @layer utilities {
-  /* Custom animations */
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out;
   }
@@ -79,7 +52,6 @@
   }
 }
 
-/* Loading spinner */
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -88,14 +60,4 @@
 
 .animate-spin {
   animation: spin 1s linear infinite;
-}
-
-/* Smooth focus rings */
-*:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-}
-
-*:focus-visible {
-  @apply ring-2 ring-blue-500 ring-offset-2;
 }
