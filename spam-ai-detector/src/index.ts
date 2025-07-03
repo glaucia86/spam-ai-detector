@@ -24,17 +24,17 @@ export class SpamDetector {
   constructor(
     token?: string, 
     endpoint?: string, 
-    modelName: string = 'xai/grok-3'
+    modelName: string = 'openai/gpt-4o'
   ) {
-    const authToken = token || process.env.GROK_GITHUB_MODEL_TOKEN;
-    const modelEndpoint = endpoint || process.env.GROK_GITHUB_MODEL_ENDPOINT || '';
+    const authToken = token || process.env.NEXT_PUBLIC_OPEN_API_GITHUB_MODEL_TOKEN;
+    const modelEndpoint = endpoint || process.env.NEXT_PUBLIC_OPEN_API_GITHUB_MODEL_ENDPOINT || '';
 
     if (!authToken) {
-      throw new Error('Authentication token not found. Check the GROK_GITHUB_MODEL_TOKEN environment variable.');
+      throw new Error('Authentication token not found. Check the NEXT_PUBLIC_OPEN_API_GITHUB_MODEL_TOKEN environment variable.');
     }
 
     if (!modelEndpoint) {
-      throw new Error('Endpoint not found. Check the GROK_GITHUB_MODEL_ENDPOINT environment variable.');
+      throw new Error('Endpoint not found. Check the NEXT_PUBLIC_OPEN_API_GITHUB_MODEL_ENDPOINT environment variable.');
     }
 
     this.client = ModelClient(
