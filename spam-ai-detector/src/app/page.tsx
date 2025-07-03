@@ -160,7 +160,7 @@ export default function HomePage() {
                 <p className="text-gray-700 mb-4">{result.reason}</p>
 
                 <div className="text-sm text-gray-600">
-                  Analyzed in: {new Date(result.timestamp).toLocaleString('pt-BR')}
+                  Analyzed in: {new Date(result.timestamp).toLocaleString('en-US')}
                 </div>
               </div>
             </div>
@@ -234,7 +234,7 @@ export default function HomePage() {
             {/* Email Legítimo */}
             <div
               className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
-              onClick={() => setExampleEmail("Olá João, espero que esteja bem. Gostaria de dar seguimento à nossa reunião de ontem sobre o cronograma do projeto. Podemos agendar uma ligação para a próxima semana para discutir os próximos passos? Atenciosamente, Sarah")}
+              onClick={() => setExampleEmail("Hello João, I hope you're well. I'd like to follow up on our meeting yesterday about the project schedule. Can we schedule a call next week to discuss the next steps? Sincerely, Sarah")}
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
@@ -270,7 +270,7 @@ export default function HomePage() {
             {/* Email de Marketing */}
             <div
               className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
-              onClick={() => setExampleEmail("Desconto especial só para você! Ganhe 20% de desconto na sua próxima compra. Frete grátis em pedidos acima de R$ 100. Clique aqui para comprar agora e economizar nos seus itens favoritos. Oferta por tempo limitado!")}
+              onClick={() => setExampleEmail("Special discount just for you! Get 20% off your next purchase. Free shipping on orders over R$100. Click here to buy now and save on your favorite items. Limited time offer!")}
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
