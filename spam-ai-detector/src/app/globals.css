@@ -1,6 +1,4 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss";
 
 @layer base {
   html {
@@ -15,7 +13,7 @@
 @layer components {
   /* Custom button styles */
   .btn-primary {
-    @apply bg-primary-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-primary-700 transition-colors;
+    @apply bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors;
   }
   
   .btn-secondary {
@@ -24,7 +22,7 @@
   
   /* Custom form styles */
   .form-input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent;
   }
   
   .form-textarea {
@@ -38,6 +36,15 @@
   
   .card-hover {
     @apply card hover:shadow-md transition-shadow;
+  }
+  
+  /* Hover scale effect */
+  .hover-scale {
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .hover-scale:hover {
+    transform: scale(1.02);
   }
 }
 
@@ -90,27 +97,5 @@
 }
 
 *:focus-visible {
-  @apply ring-2 ring-primary-500 ring-offset-2;
-}
-
-/* Animações suaves */
-.hover-scale {
-  transition: transform 0.2s ease-in-out;
-}
-
-.hover-scale:hover {
-  transform: scale(1.02);
-}
-
-/* Gradiente animado para o fundo */
-.animated-gradient {
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-}
-
-@keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  @apply ring-2 ring-blue-500 ring-offset-2;
 }
