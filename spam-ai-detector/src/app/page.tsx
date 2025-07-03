@@ -25,7 +25,7 @@ export default function HomePage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/analyze', {
+      const response = await fetch('/api/analyze/api', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
