@@ -25,7 +25,7 @@ export interface SpamResult {
 
 export class LangChainSpamDetector {
   private llm: ChatOpenAI;
-  private outputParser: StructuredOutputParser<z.infer<typeof spamAnalysisSchema>>;
+  private outputParser: StructuredOutputParser<typeof spamAnalysisSchema>;
   private promptTemplate: PromptTemplate;
 
   constructor() {
