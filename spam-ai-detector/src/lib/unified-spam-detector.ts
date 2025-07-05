@@ -96,4 +96,49 @@ export class UnifiedSpamDetector {
       return null;
     }
   }
+
+  async compareDetectors(email: string): Promise<{
+    basic: UnifiedSpamResult | null;
+    advanced: UnifiedSpamResult | null;
+    memory: UnifiedSpamResult | null;
+    consensus: {
+      isSpam: boolean;
+      confidence: number;
+      agreement: number;
+    };
+  }> {
+    const [basicResult, advancedResult, memoryResult] = await Promise.all([
+      this.analyzeSpam(email, 'basic'),
+      this.analyzeSpam(email, 'advanced'),
+      this.analyzeSpam(email, 'memory')
+    ]);
+
+    // Calcular consenso
+    const results = [basicResult, advancedResult, memoryResult].filter(r => r !== null);
+    const spamCount = results.filter(r => r!.isSpam).length;
+    const avgConfidence = results.reduce((sum, r) => sum + r!.confidence, 0) / results.length;
+    const agreement = results.length > 0 ? Math.max(spamCount, results.length - spamCount) / results.length : 0;
+
+    return {
+      basic: basicResult,
+      advanced: advancedResult,
+      memory: memoryResult,
+      consensus: {
+        isSpam: spamCount > results.length / 2,
+        confidence: avgConfidence,
+        agreement
+      }
+    };
+  }
+
+  getMemoryStats() {
+    return this.memoryDetector.getCacheStats();
+  }
+
+  async clearAll() {
+    this.memoryDetector.clearCache();
+    await this.memoryDetector.clearMemory();
+  }
 }
+
+export default UnifiedSpamDetector;
