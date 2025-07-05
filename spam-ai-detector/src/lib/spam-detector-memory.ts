@@ -18,7 +18,7 @@ const contextualSpamAnalysisSchema = z.object({
 
 export interface CachedResult {
   hash: string;
-  result: any;
+  result: MemorySpamResult;
   timestamp: number;
   hitCount: number;
 }
@@ -82,7 +82,7 @@ export class MemorySpamDetector {
     return cached;
   }
 
-  private setCachedResult(emailHash: string, result: any): void {
+  private setCachedResult(emailHash: string, result: MemorySpamResult): void {
     // Limpar cache se estiver muito grande
     if (this.cache.size >= this.MAX_CACHE_SIZE) {
       // Remover entrada mais antiga
@@ -101,7 +101,7 @@ export class MemorySpamDetector {
   }
 
   private async createContextualPrompt(): Promise<PromptTemplate> {
-    const memoryContext = await this.memory.loadMemoryVariables({});
+    //const memoryContext = await this.memory.loadMemoryVariables({});
 
     return PromptTemplate.fromTemplate(
       `Você é um detector de spam avançado com memória de análises anteriores.

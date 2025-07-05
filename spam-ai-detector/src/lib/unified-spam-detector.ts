@@ -12,7 +12,20 @@ export interface UnifiedSpamResult {
   threatLevel?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   detectorUsed: DetectorType;
   analysisTime: number;
-  additionalInfo?: any;
+  additionalInfo?: {
+    categories?: string[];
+    recommendedAction?: string;
+    riskFactors?: string[];
+    analysis?: {
+      linguistic?: string;
+      behavioral?: string;
+      technical?: string;
+    };
+    patternSimilarity?: number;
+    learningFeedback?: string;
+    fromCache?: boolean;
+    [key: string]: unknown;
+  };
 }
 
 export class UnifiedSpamDetector {
@@ -63,7 +76,11 @@ export class UnifiedSpamDetector {
             additionalInfo: {
               recommendedAction: result.recommendedAction,
               riskFactors: result.riskFactors,
-              analysis: result.analysis
+              analysis: {
+                linguistic: `Suspicious keywords: ${result.analysis.suspiciousKeywords.join(', ')}, Grammar issues: ${result.analysis.grammarIssues}`,
+                behavioral: `Urgency level: ${result.analysis.urgencyLevel}, Financial requests: ${result.analysis.hasFinancialRequests}, Personal info requests: ${result.analysis.hasPersonalInfoRequests}`,
+                technical: `Phishing probability: ${result.analysis.phishingProbability}%, Scam probability: ${result.analysis.scamProbability}%, Malware probability: ${result.analysis.malwareProbability}%, Category: ${result.analysis.spamCategory}`
+              }
             }
           };
         }
