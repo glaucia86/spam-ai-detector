@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import UnifiedSpamDetector, { DetectorType } from "@/lib/unified-spam-detector";
+import UnifiedSpamDetector, { DetectorType } from "../../../lib/unified-spam-detector";
 
 // Cache global do detector (singleton)
 let detectorInstance: UnifiedSpamDetector | null = null;
