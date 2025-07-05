@@ -1,4 +1,3 @@
-import { de } from "zod/v4/locales";
 import AdvancedSpamDetector from "./spam-detector-advanced";
 import LangChainSpamDetector from "./spam-detector-langchain";
 import MemorySpamDetector from "./spam-detector-memory";
