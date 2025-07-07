@@ -10,9 +10,9 @@ import { createHash } from "crypto";
 const contextualSpamAnalysisSchema = z.object({
   is_spam: z.boolean().describe("If the email is spam"),
   reason: z.string().describe("Detailed explanation"),
-  confidence: z.number().min(0).max(1).describe("Confidence in the decision"),
+  confidence: z.number().min(0).max(1).describe("Confidence in the decision").default(0.5),
   threat_level: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).describe("Threat level"),
-  pattern_similarity: z.number().min(0).max(1).describe("Similarity to known patterns"),
+  pattern_similarity: z.number().min(0).max(1).describe("Similarity to known patterns").default(0.0),
   learning_feedback: z.string().describe("What was learned from this analysis")
 });
 
@@ -53,7 +53,6 @@ export class MemorySpamDetector {
       },
     });
 
-    // Configurar memory para manter contexto de análises anteriores
     this.memory = new BufferMemory({
       memoryKey: "spam_analysis_history",
       humanPrefix: "Email for analysis",
@@ -71,21 +70,17 @@ export class MemorySpamDetector {
     const cached = this.cache.get(emailHash);
     if (!cached) return null;
 
-    // Verificar se o cache ainda é válido
     if (Date.now() - cached.timestamp > this.CACHE_EXPIRY) {
       this.cache.delete(emailHash);
       return null;
     }
 
-    // Incrementar contador de hits
     cached.hitCount++;
     return cached;
   }
 
   private setCachedResult(emailHash: string, result: MemorySpamResult): void {
-    // Limpar cache se estiver muito grande
     if (this.cache.size >= this.MAX_CACHE_SIZE) {
-      // Remover entrada mais antiga
       const oldestKey = this.cache.keys().next().value;
       if (oldestKey) {
         this.cache.delete(oldestKey);
@@ -101,7 +96,6 @@ export class MemorySpamDetector {
   }
 
   private async createContextualPrompt(): Promise<PromptTemplate> {
-    //const memoryContext = await this.memory.loadMemoryVariables({});
 
     return PromptTemplate.fromTemplate(
       `Você é um detector de spam avançado com memória de análises anteriores.
@@ -127,10 +121,21 @@ export class MemorySpamDetector {
       - Pode estar tentando contornar detecção
       - Representa uma ameaça real aos usuários
 
-      IMPORTANTE: Use seu conhecimento acumulado para fazer uma análise mais precisa.
+      IMPORTANTE: 
+      - Use seu conhecimento acumulado para fazer uma análise mais precisa
+      - SEMPRE forneça um valor de confidence entre 0.0 e 1.0
+      - SEMPRE forneça um valor de pattern_similarity entre 0.0 e 1.0
 
       {format_instructions}`
     );
+  }
+
+  private validateNumericValue(value: any, defaultValue: number): number {
+    if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
+      return Math.max(0, Math.min(1, value)); // Garante que o valor esteja entre 0 e 1
+    }
+
+    return defaultValue;
   }
 
   async analyzeWithMemory(email: string): Promise<MemorySpamResult | null> {
@@ -153,7 +158,6 @@ export class MemorySpamDetector {
       const sanitizedEmail = this.sanitizeEmail(email);
       const emailHash = this.generateEmailHash(sanitizedEmail);
 
-      // Verificar cache primeiro
       const cachedResult = this.getCachedResult(emailHash);
       if (cachedResult) {
         return {
@@ -163,55 +167,61 @@ export class MemorySpamDetector {
         };
       }
 
-      // Criar prompt com contexto
       const promptTemplate = await this.createContextualPrompt();
 
-      // Criar chain com output parser estruturado
       const chain = new LLMChain({
         llm: this.llm,
         prompt: promptTemplate,
         outputParser: this.outputParser
       });
 
-      // Obter contexto da memória
       const memoryVariables = await this.memory.loadMemoryVariables({});
 
-      // Executar análise
       const result = await chain.call({
         email_content: sanitizedEmail,
         format_instructions: this.outputParser.getFormatInstructions(),
         spam_analysis_history: memoryVariables.spam_analysis_history || ""
       });
 
+      const confidence = this.validateNumericValue(result.confidence, 0.5);
+      const patternSimilarity = this.validateNumericValue(result.pattern_similarity, 0.0);
+
       const analysisResult: MemorySpamResult = {
-        isSpam: result.is_spam,
-        reason: result.reason,
-        confidence: result.confidence,
-        threatLevel: result.threat_level,
-        patternSimilarity: result.pattern_similarity,
-        learningFeedback: result.learning_feedback,
+        isSpam: Boolean(result.is_spam),
+        reason: String(result.reason || 'Analysis performed'),
+        confidence: confidence,
+        threatLevel: result.threat_level || "LOW",
+        patternSimilarity: patternSimilarity,
+        learningFeedback: String(result.learning_feedback || 'Analysis completed'),
         fromCache: false,
         analysisTime: Date.now() - startTime
       };
 
-      // Adicionar à memory para futuras análises
       await this.memory.saveContext(
         { input: `Email analyzed: ${sanitizedEmail.substring(0, 200)}...` },
         { output: `Result: ${result.is_spam ? 'SPAM' : 'LEGITIMATE'} - ${result.reason}` }
       );
 
-      // Salvar no cache
       this.setCachedResult(emailHash, analysisResult);
 
       return analysisResult;
 
     } catch (error) {
       console.error('Erro na análise com memory:', error);
-      return null;
+      
+      return {
+        isSpam: false,
+        reason: 'An error occurred during analysis',
+        confidence: 0.5,
+        threatLevel: "LOW",
+        patternSimilarity: 0.0,
+        learningFeedback: 'Error during analysis',
+        fromCache: false,
+        analysisTime: Date.now() - startTime
+      };
     }
   }
 
-  // Métodos para gerenciar cache e memory
   getCacheStats() {
     const stats = Array.from(this.cache.values()).reduce(
       (acc, item) => ({
@@ -252,7 +262,6 @@ export class MemorySpamDetector {
     return sanitized.length > 3000 ? sanitized.substring(0, 3000) + "..." : sanitized;
   }
 
-  // Método de compatibilidade
   async checkSpam(email: string): Promise<{ isSpam: boolean; reason: string; confidence: number } | null> {
     const result = await this.analyzeWithMemory(email);
     if (!result) return null;
