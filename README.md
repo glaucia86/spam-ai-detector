@@ -13,7 +13,7 @@ An advanced, production-ready spam detection system built with **[LangChain.js](
 
 ![Project Demo](./resource/images/spam_detector_ai_01.gif)
 
-## Do you want to test the application?
+## 🧪 Do you want to test the application?
 
 Click in the Codespaces button below to get started.
 
