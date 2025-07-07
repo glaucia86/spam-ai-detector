@@ -111,8 +111,8 @@ An advanced, production-ready spam detection system built with **[LangChain.js](
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/spam-detector-ai.git
-cd spam-detector-ai
+git clone https://github.com/your-username/spam-ai-detector.git
+cd spam-ai-detector
 ```
 
 ### 2. Install Dependencies
