@@ -1,26 +1,58 @@
-import SpamDetector from "@/index";
 import { NextRequest, NextResponse } from "next/server";
+import UnifiedSpamDetector, { DetectorType } from "../../../lib/unified-spam-detector";
+
+// Cache global do detector (singleton)
+let detectorInstance: UnifiedSpamDetector | null = null;
+
+function getDetectorInstance(): UnifiedSpamDetector {
+  if (!detectorInstance) {
+    detectorInstance = new UnifiedSpamDetector();
+  }
+  return detectorInstance;
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+    const body = await request.json();
+    const { email, detectorType = 'basic', compare = false } = body;
 
     if (!email || typeof email !== "string") {
       return NextResponse.json(
-        { error: 'Email content is required' },
+        { error: 'Email content required' },
         { status: 400 }
       );
     }
 
     if (email.length > 10000) {
       return NextResponse.json(
-        { error: 'Email content too long (max 10,000 characters)' },
+        { error: 'Email content too long (maximum 10,000 characters)' },
         { status: 400 }
       );
     }
 
-    const detector = new SpamDetector();
-    const result = await detector.checkSpam(email);
+    const detector = getDetectorInstance();
+
+    // Se solicitado comparação entre detectores
+    if (compare) {
+      const comparison = await detector.compareDetectors(email);
+      
+      return NextResponse.json({
+        success: true,
+        data: {
+          // Retornar resultado do consenso para compatibilidade
+          isSpam: comparison.consensus.isSpam,
+          reason: `Consensus among detectors: ${comparison.consensus.agreement * 100}% agreement`,
+          confidence: comparison.consensus.confidence,
+          timestamp: new Date().toISOString(),
+          // Dados adicionais
+          comparison: comparison,
+          detectorUsed: 'comparison'
+        }
+      });
+    }
+
+    // Análise com detector específico
+    const result = await detector.analyzeSpam(email, detectorType as DetectorType);
 
     if (!result) {
       return NextResponse.json(
@@ -32,28 +64,84 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
+        // Campos principais para compatibilidade com frontend
         isSpam: result.isSpam,
         reason: result.reason,
-        confidence: result.confidence || 0.5,
-        timestamp: new Date().toISOString()
+        confidence: result.confidence,
+        timestamp: new Date().toISOString(),
+        
+        // Dados adicionais do LangChain
+        threatLevel: result.threatLevel,
+        detectorUsed: result.detectorUsed,
+        analysisTime: result.analysisTime,
+        additionalInfo: result.additionalInfo
       }
     });
 
-  } catch (error) {
-    console.error('API Error...: ', error);
+  } catch (error: unknown) {
+    console.error('Error in LangChain API:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
+      },
       { status: 500 }
     );
   }
 }
 
-export async function GET() {
-  return NextResponse.json({
-    status: 'ok',
-    service: 'Spam AI Email Detector',
-    timestamp: new Date().toISOString(),
-    version: '2.0.0',
-    description: 'This service analyzes email content to detect spam using GitHub Models and OpenAI.',
-  });
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const action = searchParams.get('action');
+
+    const detector = getDetectorInstance();
+
+    switch (action) {
+      case 'stats':
+        return NextResponse.json({
+          status: 'ok',
+          service: 'LangChain.js Spam AI Detector',
+          version: '3.0.0',
+          detectors: ['basic', 'advanced', 'memory'],
+          memoryStats: detector.getMemoryStats(),
+          timestamp: new Date().toISOString()
+        });
+
+      case 'clear-cache':
+        await detector.clearAll();
+        return NextResponse.json({
+          status: 'ok',
+          message: 'Cache and memory cleared successfully'
+        });
+
+      default:
+        return NextResponse.json({
+          status: 'ok',
+          service: 'LangChain.js Spam AI Detector',
+          version: '3.0.0',
+          description: 'Advanced spam detector using LangChain.js with multiple analysis algorithms',
+          features: [
+            'Basic analysis with LangChain',
+            'Advanced multi-step analysis',
+            'Detector with memory and cache',
+            'Comparison among detectors',
+            'Structured output parsing',
+            'Dynamic prompt templates'
+          ],
+          endpoints: {
+            'POST /api/analyze': 'Analyze an email',
+            'GET /api/analyze?action=stats': 'System statistics',
+            'GET /api/analyze?action=clear-cache': 'Clear cache and memory'
+          },
+          timestamp: new Date().toISOString()
+        });
+    }
+  } catch (error) {
+    console.error('Error in GET LangChain API:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 }
