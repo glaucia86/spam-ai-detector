@@ -2,7 +2,6 @@ import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { StructuredOutputParser } from "langchain/output_parsers";
 import { BufferMemory } from "langchain/memory";
-import { LLMChain } from "langchain/chains";
 import { z } from "zod";
 import { createHash } from "crypto";
 
@@ -169,15 +168,11 @@ export class MemorySpamDetector {
 
       const promptTemplate = await this.createContextualPrompt();
 
-      const chain = new LLMChain({
-        llm: this.llm,
-        prompt: promptTemplate,
-        outputParser: this.outputParser
-      });
+      const chain = promptTemplate.pipe(this.llm).pipe(this.outputParser);
 
       const memoryVariables = await this.memory.loadMemoryVariables({});
 
-      const result = await chain.call({
+      const result = await chain.invoke({
         email_content: sanitizedEmail,
         format_instructions: this.outputParser.getFormatInstructions(),
         spam_analysis_history: memoryVariables.spam_analysis_history || ""
