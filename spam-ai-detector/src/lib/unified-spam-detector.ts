@@ -1,6 +1,8 @@
+import { ca } from "zod/v4/locales";
 import AdvancedSpamDetector from "./spam-detector-advanced";
 import LangChainSpamDetector from "./spam-detector-langchain";
 import MemorySpamDetector from "./spam-detector-memory";
+import { cache } from "react";
 
 
 export type DetectorType = 'basic' | 'advanced' | 'memory';
@@ -39,7 +41,25 @@ export class UnifiedSpamDetector {
     this.memoryDetector = new MemorySpamDetector();
   }
 
-  async analyzeSpam(
+  private validateConfidence(confidence: any): number {
+    if (typeof confidence === 'number' && confidence && !isNaN(confidence) && isFinite(confidence)) {
+      return Math.min(Math.max(confidence, 0), 1); // Asegura que esté entre 0 y 1
+    }
+
+    console.warn(`Invalid confidence value: ${confidence}. Defaulting to 0.5.`);
+    return 0.5; 
+  }
+
+  validateThreatLevel(threatLevel: any): "LOW" | "MEDIUM" | "HIGH" | "CRITICAL" {
+    const validaLevels = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
+    if (typeof threatLevel === 'string' && validaLevels.includes(threatLevel)) {
+      return threatLevel as "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+    }
+
+    return "LOW"; 
+  }
+
+async analyzeSpam(
     email: string,
     detectorType: DetectorType = 'basic'
   ): Promise<UnifiedSpamResult | null> {
@@ -47,39 +67,41 @@ export class UnifiedSpamDetector {
 
     try {
       switch (detectorType) {
-        case 'basic':
+        case 'basic': {
           const result = await this.basicDetector.checkSpam(email);
           if (!result) return null;
 
           return {
-            isSpam: result.isSpam,
-            reason: result.reason,
-            confidence: result.confidence,
-            threatLevel: result.threatLevel,
+            isSpam: Boolean(result.isSpam),
+            reason: String(result.reason || "Análise realizada"),
+            confidence: this.validateConfidence(result.confidence),
+            threatLevel: this.validateThreatLevel(result.threatLevel),
             detectorUsed: 'basic',
             analysisTime: Date.now() - startTime,
             additionalInfo: {
-              categories: result.categories
+              categories: result.categories || []
             }
           };
+        }
+
         case 'advanced': {
           const result = await this.advancedDetector.analyzeSpamAdvanced(email);
           if (!result) return null;
 
           return {
-            isSpam: result.isSpam,
-            reason: result.reason,
-            confidence: result.confidence,
-            threatLevel: result.threatLevel,
+            isSpam: Boolean(result.isSpam),
+            reason: String(result.reason || "Análise realizada"),
+            confidence: this.validateConfidence(result.confidence),
+            threatLevel: this.validateThreatLevel(result.threatLevel),
             detectorUsed: 'advanced',
             analysisTime: Date.now() - startTime,
             additionalInfo: {
-              recommendedAction: result.recommendedAction,
-              riskFactors: result.riskFactors,
+              recommendedAction: result.recommendedAction || "Nenhuma ação específica recomendada",
+              riskFactors: result.riskFactors || [],
               analysis: {
-                linguistic: `Suspicious keywords: ${result.analysis.suspiciousKeywords.join(', ')}, Grammar issues: ${result.analysis.grammarIssues}`,
-                behavioral: `Urgency level: ${result.analysis.urgencyLevel}, Financial requests: ${result.analysis.hasFinancialRequests}, Personal info requests: ${result.analysis.hasPersonalInfoRequests}`,
-                technical: `Phishing probability: ${result.analysis.phishingProbability}%, Scam probability: ${result.analysis.scamProbability}%, Malware probability: ${result.analysis.malwareProbability}%, Category: ${result.analysis.spamCategory}`
+                linguistic: `Suspicious keywords: ${result.analysis?.suspiciousKeywords?.join(', ') || 'none'}, Grammar issues: ${result.analysis?.grammarIssues || 0}`,
+                behavioral: `Urgency level: ${result.analysis?.urgencyLevel || 0}, Financial requests: ${result.analysis?.hasFinancialRequests || false}, Personal info requests: ${result.analysis?.hasPersonalInfoRequests || false}`,
+                technical: `Phishing probability: ${(result.analysis?.phishingProbability || 0) * 100}%, Scam probability: ${(result.analysis?.scamProbability || 0) * 100}%, Malware probability: ${(result.analysis?.malwareProbability || 0) * 100}%, Category: ${result.analysis?.spamCategory || 'UNKNOWN'}`
               }
             }
           };
@@ -90,16 +112,16 @@ export class UnifiedSpamDetector {
           if (!result) return null;
 
           return {
-            isSpam: result.isSpam,
-            reason: result.reason,
-            confidence: result.confidence,
-            threatLevel: result.threatLevel,
+            isSpam: Boolean(result.isSpam),
+            reason: String(result.reason || "Análise realizada"),
+            confidence: this.validateConfidence(result.confidence),
+            threatLevel: this.validateThreatLevel(result.threatLevel),
             detectorUsed: 'memory',
-            analysisTime: result.analysisTime,
+            analysisTime: result.analysisTime || (Date.now() - startTime),
             additionalInfo: {
-              patternSimilarity: result.patternSimilarity,
-              learningFeedback: result.learningFeedback,
-              fromCache: result.fromCache
+              patternSimilarity: this.validateConfidence(result.patternSimilarity),
+              learningFeedback: String(result.learningFeedback || "Análise concluída"),
+              fromCache: Boolean(result.fromCache)
             }
           };
         }
@@ -108,8 +130,19 @@ export class UnifiedSpamDetector {
           throw new Error(`Detector type not supported: ${detectorType}`);
       }
     } catch (error) {
-      console.error(`Error analyzing spam..: ${detectorType}`, error);
-      return null;
+      console.error(`Error analyzing spam with ${detectorType}:`, error);
+      
+      return {
+        isSpam: false,
+        reason: "Erro na análise - email considerado seguro por precaução",
+        confidence: 0.5,
+        threatLevel: "LOW",
+        detectorUsed: detectorType,
+        analysisTime: Date.now() - startTime,
+        additionalInfo: {
+          error: "Analysis failed, defaulting to safe classification"
+        }
+      };
     }
   }
 
@@ -129,11 +162,17 @@ export class UnifiedSpamDetector {
       this.analyzeSpam(email, 'memory')
     ]);
 
-    // Calcular consenso
+    // Calcular consenso com validação
     const results = [basicResult, advancedResult, memoryResult].filter(r => r !== null);
     const spamCount = results.filter(r => r!.isSpam).length;
-    const avgConfidence = results.reduce((sum, r) => sum + r!.confidence, 0) / results.length;
-    const agreement = results.length > 0 ? Math.max(spamCount, results.length - spamCount) / results.length : 0;
+    
+    // Calcular média de confidence com validação
+    const confidences = results.map(r => this.validateConfidence(r!.confidence));
+    const avgConfidence = confidences.length > 0 ? 
+      confidences.reduce((sum, conf) => sum + conf, 0) / confidences.length : 0.5;
+    
+    const agreement = results.length > 0 ? 
+      Math.max(spamCount, results.length - spamCount) / results.length : 0;
 
     return {
       basic: basicResult,
@@ -141,19 +180,36 @@ export class UnifiedSpamDetector {
       memory: memoryResult,
       consensus: {
         isSpam: spamCount > results.length / 2,
-        confidence: avgConfidence,
-        agreement
+        confidence: this.validateConfidence(avgConfidence),
+        agreement: this.validateConfidence(agreement)
       }
     };
   }
 
   getMemoryStats() {
-    return this.memoryDetector.getCacheStats();
+    try {
+      return this.memoryDetector.getCacheStats();
+    } catch (error) {
+      console.error("Error getting memory stats:", error);
+      return {
+        totalEntries: 0,
+        totalHits: 0,
+        hitRate: 0,
+        cacheSize: 0,
+        maxSize: 100,
+        oldestEntry: Date.now(),
+        newestEntry: Date.now()
+      };
+    }
   }
 
   async clearAll() {
-    this.memoryDetector.clearCache();
-    await this.memoryDetector.clearMemory();
+    try {
+      this.memoryDetector.clearCache();
+      await this.memoryDetector.clearMemory();
+    } catch (error) {
+      console.error("Error clearing memory:", error);
+    }
   }
 }
 
