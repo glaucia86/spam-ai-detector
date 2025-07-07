@@ -145,7 +145,7 @@ export class AdvancedSpamDetector {
       Provide:
       - Final decision (spam or not)
       - Confidence level
-      - Clear explanation in Portuguese
+      - Clear explanation in English
       - Recommended action for the user
       - Specific risk factors identified
       

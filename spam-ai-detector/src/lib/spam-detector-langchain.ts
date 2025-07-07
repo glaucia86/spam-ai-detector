@@ -9,7 +9,7 @@ import { z } from "zod";
 
 const spamAnalysisSchema = z.object({
   is_spam: z.boolean().describe("Whether the email is spam or not"),
-  reason: z.string().describe("Detailed explanation in Portuguese of why it is or isn't spam"),
+  reason: z.string().describe("Detailed explanation in English of why it is or isn't spam"),
   confidence: z.number().min(0).max(1).describe("Confidence level between 0.0 and 1.0"),
   threat_level: z.enum(["LOW", "MEDIUM", "HIGH"]).describe("Threat level of the spam email"),
   categories: z.array(z.string()).describe("Categories of spam detected in the email").optional(),
