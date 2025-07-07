@@ -231,7 +231,7 @@ export default function HomePage() {
                         <h3 className={`text-xl font-bold ${
                           result.isSpam ? 'text-red-800' : 'text-green-800'
                         }`}>
-                          {result.isSpam ? 'Spam Detectado' : 'Parece Seguro'}
+                          {result.isSpam ? 'Spam Detected' : 'Looks Safe'}
                         </h3>
                         {result.threatLevel && (
                           <span className={`text-xs font-medium px-2 py-1 rounded-full ${getThreatLevelColor(result.threatLevel)}`}>
@@ -263,7 +263,7 @@ export default function HomePage() {
               {/* Additional Info Sidebar */}
               <div className="space-y-4">
                 <div className="bg-white p-4 rounded-xl shadow-md border">
-                  <h4 className="font-semibold text-gray-900 mb-3">Informações Adicionais</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">Additional Information</h4>
                   
                   {result.additionalInfo?.fromCache && (
                     <div className="mb-2 p-2 bg-blue-50 rounded text-sm text-blue-800">
