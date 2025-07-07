@@ -1,5 +1,5 @@
-# 1. What problems do you see with this code?
-# 2. What ideas do you have to make it better?
+#### 1. What problems do you see with this code?
+#### 2. What ideas do you have to make it better?
 
 ```python
 def check_spam(email: str) -> str | None:
