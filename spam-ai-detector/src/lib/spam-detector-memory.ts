@@ -130,7 +130,7 @@ export class MemorySpamDetector {
     );
   }
 
-  private validateNumericValue(value: any, defaultValue: number): number {
+  private validateNumericValue(value: unknown, defaultValue: number): number {
     if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
       return Math.max(0, Math.min(1, value)); // Garante que o valor esteja entre 0 e 1
     }

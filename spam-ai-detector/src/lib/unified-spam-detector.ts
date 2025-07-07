@@ -1,9 +1,6 @@
-import { ca } from "zod/v4/locales";
 import AdvancedSpamDetector from "./spam-detector-advanced";
 import LangChainSpamDetector from "./spam-detector-langchain";
 import MemorySpamDetector from "./spam-detector-memory";
-import { cache } from "react";
-
 
 export type DetectorType = 'basic' | 'advanced' | 'memory';
 
@@ -41,7 +38,7 @@ export class UnifiedSpamDetector {
     this.memoryDetector = new MemorySpamDetector();
   }
 
-  private validateConfidence(confidence: any): number {
+  private validateConfidence(confidence: unknown): number {
     if (typeof confidence === 'number' && confidence && !isNaN(confidence) && isFinite(confidence)) {
       return Math.min(Math.max(confidence, 0), 1); // Asegura que esté entre 0 y 1
     }
@@ -50,7 +47,7 @@ export class UnifiedSpamDetector {
     return 0.5; 
   }
 
-  validateThreatLevel(threatLevel: any): "LOW" | "MEDIUM" | "HIGH" | "CRITICAL" {
+  validateThreatLevel(threatLevel: unknown): "LOW" | "MEDIUM" | "HIGH" | "CRITICAL" {
     const validaLevels = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
     if (typeof threatLevel === 'string' && validaLevels.includes(threatLevel)) {
       return threatLevel as "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
