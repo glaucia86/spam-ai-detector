@@ -1,9 +1,11 @@
-# Spam E-mail A.I Detector with GitHub Models
+# Spam E-mail A.I Detector with LangChain.js & GitHub Models
 
 This project came about after analyzing a Python spam detection code that had several serious issues. I decided to rewrite it in TypeScript using GitHub Models to show how to do it right.
 
 ![](./resource/images/image_01.png)
 ![](./resource/images/image_02.png)
+![](./resource/images/image_03.png)
+![](./resource/images/image_04.png)
 
 You can see the project in action in the gif below:
 
@@ -11,7 +13,7 @@ You can see the project in action in the gif below:
 
 ## What was wrong with the original code?
 
-The original Python (you can see [the code here](https://github.com/glaucia86/spam-detector-ai/blob/main/resource/python-code.py) code was pretty simple, but had massive holes that would cause headaches in production:
+The original Python (you can see [the code here](https://github.com/glaucia86/spam-detector-ai/blob/main/resource/python-code.py). The code was pretty simple, but had massive holes that would cause headaches in production:
 
 ### Problem #1: Zero error handling
 
