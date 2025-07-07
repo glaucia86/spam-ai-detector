@@ -8,7 +8,7 @@
 
 ---
 
-> Before you start, please give a ⭐️ to this repository if you find it useful! And **[open an issue](https://github.com/glaucia86/spam-ai-detector/issues)**if you have any questions or suggestions.
+> Before you start, please give a ⭐️ to this repository if you find it useful! And **[open an issue](https://github.com/glaucia86/spam-ai-detector/issues)** if you have any questions or suggestions.
 
 An advanced, production-ready spam detection system built with **[LangChain.js](https://js.langchain.com/docs/introduction/)**, **[Next.js](https://nextjs.org/)**, and **[GitHub Models](https://github.com/marketplace?type=models)**. Features multiple AI-powered detection algorithms, memory capabilities, caching, and a beautiful web interface.
 
