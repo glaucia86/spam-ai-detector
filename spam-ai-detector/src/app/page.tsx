@@ -35,7 +35,7 @@ export default function HomePage() {
 
   const analyzeEmail = async () => {
     if (!email.trim()) {
-      setError('Por favor, insira o conteúdo do email.');
+      setError('Please insert the content of the email.');
       return;
     }
 
@@ -58,12 +58,12 @@ export default function HomePage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Falha ao analisar email');
+        throw new Error(data.error || 'Failed to analyze email');
       }
 
       setResult(data.data);
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Ocorreu um erro inesperado');
+      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }
@@ -78,13 +78,13 @@ export default function HomePage() {
   const getDetectorDescription = (type: DetectorType) => {
     switch (type) {
       case 'basic':
-        return 'Análise rápida usando LangChain com output parsing estruturado';
+        return 'A quick analysis using LangChain with structured output parsing';
       case 'advanced':
-        return 'Análise multi-etapa com avaliação de ameaças e categorização';
+        return 'Multi-step analysis with threat assessment and categorization';
       case 'memory':
-        return 'Detector com memory que aprende com análises anteriores e usa cache';
+        return 'Memory-enabled detector that learns from previous analyses and uses caching';
       case 'compare':
-        return 'Compara todos os detectores e fornece consenso';
+        return 'Compares all detectors and provides consensus';
       default:
         return '';
     }
@@ -111,12 +111,12 @@ export default function HomePage() {
         </div>
         
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Detector de Spam com LangChain.js
+          Spam A.I Detector with LangChain.js
         </h1>
         
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Análise avançada de spam usando LangChain.js com múltiplos algoritmos, 
-          memory, cache e output parsing estruturado
+          Advanced spam A.I e-mail analysis using LangChain.js with multiple algorithms,
+          memory, caching, and structured output parsing
         </p>
       </div>
 
@@ -125,7 +125,7 @@ export default function HomePage() {
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Detector Selection */}
           <div className="p-6 bg-gray-50 border-b">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Escolha o Detector:</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose the Detector:</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {(['basic', 'advanced', 'memory', 'compare'] as DetectorType[]).map((type) => (
                 <button
@@ -152,7 +152,7 @@ export default function HomePage() {
               <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <h2 className="text-xl font-semibold text-gray-900">Análise de Texto</h2>
+              <h2 className="text-xl font-semibold text-gray-900">Text Analysis</h2>
             </div>
             
             <div className="mb-6">
@@ -163,7 +163,7 @@ export default function HomePage() {
                 placeholder="Cole o conteúdo do seu email aqui..."
               />
               <div className="mt-2 text-sm text-gray-500">
-                {email.length} caracteres
+                {email.length} characters
               </div>
             </div>
 
@@ -178,10 +178,10 @@ export default function HomePage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Analisando com {detectorType}...
+                  Analyzing with {detectorType}...
                 </span>
               ) : (
-                `Analisar com ${detectorType}`
+                `Analyze with ${detectorType}`
               )}
             </button>
           </div>
@@ -252,9 +252,9 @@ export default function HomePage() {
                   <p className="text-gray-700 mb-4">{result.reason}</p>
                   
                   <div className="flex items-center justify-between text-sm text-gray-600">
-                    <span>Analisado em: {new Date(result.timestamp).toLocaleString('pt-BR')}</span>
+                    <span>Analyzed on: {new Date(result.timestamp).toLocaleString('pt-BR')}</span>
                     {result.analysisTime && (
-                      <span>Tempo: {result.analysisTime}ms</span>
+                      <span>Time: {result.analysisTime}ms</span>
                     )}
                   </div>
                 </div>
@@ -267,20 +267,20 @@ export default function HomePage() {
                   
                   {result.additionalInfo?.fromCache && (
                     <div className="mb-2 p-2 bg-blue-50 rounded text-sm text-blue-800">
-                      📦 Resultado do cache
+                      📦 Cached result
                     </div>
                   )}
                   
                   {result.additionalInfo?.patternSimilarity !== undefined && (
                     <div className="mb-2">
-                      <span className="text-sm text-gray-600">Similaridade com padrões:</span>
+                      <span className="text-sm text-gray-600">Pattern similarity:</span>
                       <div className="text-sm font-medium">{(result.additionalInfo.patternSimilarity * 100).toFixed(1)}%</div>
                     </div>
                   )}
 
                   {result.additionalInfo?.riskFactors && (
                     <div className="mb-2">
-                      <span className="text-sm text-gray-600">Fatores de risco:</span>
+                      <span className="text-sm text-gray-600">Risk factors:</span>
                       <ul className="text-sm mt-1">
                         {result.additionalInfo.riskFactors.slice(0, 3).map((factor: string, index: number) => (
                           <li key={index} className="text-red-600">• {factor}</li>
@@ -291,9 +291,9 @@ export default function HomePage() {
 
                   {result.comparison && (
                     <div className="mt-4 p-3 bg-gray-50 rounded">
-                      <div className="text-sm font-medium text-gray-900 mb-2">Consenso dos Detectores:</div>
+                      <div className="text-sm font-medium text-gray-900 mb-2">Detector Consensus:</div>
                       <div className="text-sm text-gray-600">
-                        Acordo: {(result.comparison.consensus.agreement * 100).toFixed(1)}%
+                        Agreement: {(result.comparison.consensus.agreement * 100).toFixed(1)}%
                       </div>
                     </div>
                   )}
@@ -307,14 +307,14 @@ export default function HomePage() {
         <div className="py-16 bg-gray-50 mt-16 rounded-2xl">
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Experimente estes exemplos:</h2>
-              <p className="text-gray-600">Clique em um dos exemplos abaixo para testar o detector</p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Try these examples:</h2>
+              <p className="text-gray-600">Click on one of the examples below to test the detector</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div 
                 className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => setExampleEmail("Olá João, espero que esteja bem. Gostaria de dar seguimento à nossa reunião de ontem sobre o cronograma do projeto. Podemos agendar uma ligação para a próxima semana para discutir os próximos passos? Atenciosamente, Sarah")}
+                onClick={() => setExampleEmail("Hello João, I hope you're well. I'd like to continue our meeting about the project schedule. Can we schedule a call next week to discuss the next steps? Sincerely, Sarah")}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
@@ -322,16 +322,16 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-gray-900">Email Legítimo</h3>
+                  <h3 className="font-semibold text-gray-900">Legitimate Email</h3>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Olá João, espero que esteja bem. Gostaria de dar seguimento à nossa reunião...
+                  Hello João, I hope you&apos;re well. I&apos;d like to follow up on our meeting about the project timeline. Can we schedule a call for next week to discuss the next steps? Best regards, Sarah
                 </p>
               </div>
 
               <div 
                 className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => setExampleEmail("PARABÉNS!!! Você GANHOU R$ 1.000.000 na nossa INCRÍVEL loteria! CLIQUE AQUI AGORA para reivindicar seu prêmio antes que expire! Aja rápido - oferta por tempo limitado! Ligue 0800-123-4567 imediatamente! Esta oferta expira em 24 horas!")}
+                onClick={() => setExampleEmail("CONGRATULATIONS!!! You WON R$ 1,000,000 in our AMAZING lottery! CLICK HERE NOW to claim your prize before it expires! Act fast - limited time offer! Call 0800-123-4567 immediately! This offer expires in 24 hours!")}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
@@ -339,16 +339,16 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-gray-900">Exemplo de Spam</h3>
+                  <h3 className="font-semibold text-gray-900">Spam Example</h3>
                 </div>
                 <p className="text-sm text-gray-600">
-                  PARABÉNS!!! Você GANHOU R$ 1.000.000 na nossa INCRÍVEL loteria...
+                  CONGRATULATIONS!!! You WON R$ 1,000,000 in our AMAZING lottery! CLICK HERE NOW to claim your prize before it expires! Act fast - limited time offer! Call 0800-123-4567 immediately! This offer expires in 24 hours!
                 </p>
               </div>
 
               <div 
                 className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => setExampleEmail("Olá, detectei atividade suspeita em sua conta bancária. Para proteger seus dados, clique neste link imediatamente e confirme suas informações: https://banco-falso.com/confirmar. Caso contrário, sua conta será bloqueada em 24 horas.")}
+                onClick={() => setExampleEmail("Hello, I detected suspicious activity in your bank account. To protect your data, click this link immediately and confirm your information: https://fake-bank.com/confirm. Otherwise, your account will be blocked in 24 hours.")}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
@@ -359,7 +359,7 @@ export default function HomePage() {
                   <h3 className="font-semibold text-gray-900">Phishing</h3>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Olá, detectei atividade suspeita em sua conta bancária...
+                  Hello, I detected suspicious activity in your bank account. To protect your data, click this link immediately and confirm your information: https://fake-bank.com/confirm. Otherwise, your account will be blocked in 24 hours.
                 </p>
               </div>
             </div>

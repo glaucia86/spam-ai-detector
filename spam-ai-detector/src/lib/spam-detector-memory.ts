@@ -97,33 +97,33 @@ export class MemorySpamDetector {
   private async createContextualPrompt(): Promise<PromptTemplate> {
 
     return PromptTemplate.fromTemplate(
-      `Você é um detector de spam avançado com memória de análises anteriores.
+      `You are an advanced spam detector with a memory of previous analyses.
 
-      CONTEXTO DE ANÁLISES ANTERIORES:
+      CONTEXT OF PREVIOUS ANALYSES:
       {spam_analysis_history}
 
-      NOVA ANÁLISE:
-      Analise o seguinte email considerando:
-      1. Padrões similares que você já viu antes
-      2. Evolução de táticas de spam
-      3. Contexto cultural brasileiro
-      4. Aprendizado de casos anteriores
+      NEW ANALYSIS:
+      Analyze the following email considering:
+      1. Similar patterns you've seen before
+      2. Evolution of spam tactics
+      3. Brazilian cultural context
+      4. Learning from previous cases
 
-      EMAIL PARA ANÁLISE:
+      EMAIL FOR ANALYSIS:
       ---
       {email_content}
       ---
 
-      Considere se este email:
-      - É similar a padrões de spam que você já identificou
-      - Usa táticas novas ou evoluídas
-      - Pode estar tentando contornar detecção
-      - Representa uma ameaça real aos usuários
+      Consider whether this email:
+      - Is similar to spam patterns you've already identified
+      - Uses new or evolved tactics
+      - May be trying to circumvent detection
+      - Poses a real threat to users
 
-      IMPORTANTE: 
-      - Use seu conhecimento acumulado para fazer uma análise mais precisa
-      - SEMPRE forneça um valor de confidence entre 0.0 e 1.0
-      - SEMPRE forneça um valor de pattern_similarity entre 0.0 e 1.0
+      IMPORTANT: 
+      - Use your accumulated knowledge to make a more accurate analysis
+      - ALWAYS provide a confidence value between 0.0 and 1.0
+      - ALWAYS provide a pattern_similarity value between 0.0 and 1.0
 
       {format_instructions}`
     );
@@ -202,7 +202,7 @@ export class MemorySpamDetector {
       return analysisResult;
 
     } catch (error) {
-      console.error('Erro na análise com memory:', error);
+      console.error('Error in analysis with memory:', error);
       
       return {
         isSpam: false,

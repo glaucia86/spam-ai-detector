@@ -72,33 +72,33 @@ export class AdvancedSpamDetector {
 
   private createContentAnalysisChain() {
     const prompt = PromptTemplate.fromTemplate(
-      `Você é um especialista em segurança cibernética e detecção de spam com anos de experiência.
+      `You are an expert in cyber security and spam detection with years of experience.
       
-      Analise o seguinte email e determine se é spam, considerando:
-      - Links suspeitos ou attachments perigosos
-      - Linguagem suspeita ou urgente
-      - Ofertas irreais ou muito boas para ser verdade 
-      - Solicitações de informações pessoais ou financeiras
-      - Erros gramaticais ou ortográficos excessivos
-      - Remetentes não confiáveis
-      - Qualquer outro sinal de alerta
+      Analyze the following email and determine if it is spam, considering:
+      - Suspicious links or dangerous attachments
+      - Suspicious or urgent language
+      - Unrealistic or too good to be true offers 
+      - Requests for personal or financial information
+      - Excessive grammatical or spelling errors
+      - Unreliable senders
+      - Any other warning signs
 
-      EMAIL PARA ANÁLISE:
+      EMAIL FOR ANALYSIS:
       ---
       {email_content}
       ---
 
-      INSTRUÇÕES IMPORTANTES:
-      - Seja preciso e detalhado na sua análise
-      - Explique claramente os motivos da sua decisão
-      - Considere o contexto cultural brasileiro
-      - Identifique categorias específicas de spam se aplicável
+      IMPORTANT INSTRUCTIONS:
+      - Be precise and detailed in your analysis
+      - Clearly explain the reasons for your decision
+      - Consider the Brazilian cultural context
+      - Identify specific spam categories if applicable
 
-      FOQUE EM: 
-      - Palavras-chave típicas de spam (URGENTE, GANHE, GRÁTIS, etc.)
-      - Qualidade da escrita e gramática
-      - Nível de urgência transmitido
-      - Solicitações financeiras ou de dados pessoais
+      FOCUS ON: 
+      - Typical spam keywords (URGENT, WIN, FREE, etc.)
+      - Quality of writing and grammar
+      - Level of urgency conveyed
+      - Financial or personal data requests
 
       {format_instructions}
       `
@@ -109,19 +109,19 @@ export class AdvancedSpamDetector {
 
   private createThreatAssesmentChain() {
     const prompt = PromptTemplate.fromTemplate(
-      `Com base na análise de conteúdo, avalie as AMEAÇAS potenciais:
+      `Based on the content analysis, evaluate the potential THREATS:
 
-      ANÁLISE DE CONTEÚDO:
+      CONTENT ANALYSIS:
       {content_analysis}
 
-      EMAIL ORIGINAL:
+      ORIGINAL EMAIL:
       {email_content}
 
-      Avalie probabilidades de:
-      - Phishing (roubo de credenciais)
-      - Golpes financeiros
-      - Malware (vírus, ransomware) e links maliciosos e suspeitos
-      - Categoria específica de spam (financeiro, farmacêutico, romance, suporte técnico, loteria, phishing)
+      Assess probabilities of:
+      - Phishing (theft of credentials)
+      - Financial scams
+      - Malware (viruses, ransomware) and malicious and suspicious links
+      - Specific spam category (financial, pharmaceutical, romance, tech support, lottery, phishing)
 
       {format_instructions}`
     );
@@ -131,23 +131,23 @@ export class AdvancedSpamDetector {
 
   private createFinalDecisionChain() {
     const prompt = PromptTemplate.fromTemplate(
-      `Tome a DECISÃO FINAL com base em todas as análises:
+      `Make the FINAL DECISION based on all the analyses:
 
-      ANÁLISE DE CONTEÚDO:
+      CONTENT ANALYSIS:
       {content_analysis}
 
-      AVALIAÇÃO DE AMEAÇAS:
+      THREAT ASSESSMENT:
       {threat_assessment}
 
-      EMAIL ORIGINAL:
+      ORIGINAL EMAIL:
       {email_content}
 
-      Forneça:
-      - Decisão final (spam ou não)
-      - Nível de confiança
-      - Explicação clara em português
-      - Ação recomendada para o usuário
-      - Fatores de risco específicos identificados
+      Provide:
+      - Final decision (spam or not)
+      - Confidence level
+      - Clear explanation in Portuguese
+      - Recommended action for the user
+      - Specific risk factors identified
       
       {format_instructions}`
     );

@@ -42,27 +42,27 @@ export class LangChainSpamDetector {
     this.outputParser = StructuredOutputParser.fromZodSchema(spamAnalysisSchema);
 
     this.promptTemplate = PromptTemplate.fromTemplate(
-      `Você é um especialista em segurança cibernética e detecção de spam com anos de experiência.
+      `You are an expert in cyber security and spam detection with years of experience.
       
-      Analise o seguinte email e determine se é spam, considerando:
-      - Links suspeitos ou attachments perigosos
-      - Linguagem suspeita ou urgente
-      - Ofertas irreais ou muito boas para ser verdade 
-      - Solicitações de informações pessoais ou financeiras
-      - Erros gramaticais ou ortográficos excessivos
-      - Remetentes não confiáveis
-      - Qualquer outro sinal de alerta
+      Analyze the following email and determine if it is spam, considering:
+      - Suspicious links or dangerous attachments
+      - Suspicious or urgent language
+      - Unrealistic or too good to be true offers 
+      - Requests for personal or financial information
+      - Excessive grammatical or spelling errors
+      - Unreliable senders
+      - Any other warning signs
 
-      EMAIL PARA ANÁLISE:
+      EMAIL FOR ANALYSIS:
       ---
       {email_content}
       ---
 
-      INSTRUÇÕES IMPORTANTES:
-      - Seja preciso e detalhado na sua análise
-      - Explique claramente os motivos da sua decisão
-      - Considere o contexto cultural brasileiro
-      - Identifique categorias específicas de spam se aplicável
+      IMPORTANT INSTRUCTIONS:
+      - Be precise and detailed in your analysis
+      - Clearly explain the reasons for your decision
+      - Consider the Brazilian cultural context
+      - Identify specific spam categories if applicable
 
       {format_instructions}
       `
@@ -75,7 +75,7 @@ export class LangChainSpamDetector {
     }
     const sanitized = email.replace(
       /(ignore|disregard|forget).*(previous|above|instruction|prompt)/gi,
-      '[CONTEÚDO FILTRADO]'
+      '[FILTERED CONTENT]'
     );
 
     return sanitized.length > 3000 ? sanitized.substring(0, 3000) + "..." : sanitized;

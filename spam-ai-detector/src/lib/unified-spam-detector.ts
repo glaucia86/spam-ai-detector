@@ -110,7 +110,7 @@ async analyzeSpam(
 
           return {
             isSpam: Boolean(result.isSpam),
-            reason: String(result.reason || "Análise realizada"),
+            reason: String(result.reason || "Analysis performed"),
             confidence: this.validateConfidence(result.confidence),
             threatLevel: this.validateThreatLevel(result.threatLevel),
             detectorUsed: 'memory',
@@ -131,7 +131,7 @@ async analyzeSpam(
       
       return {
         isSpam: false,
-        reason: "Erro na análise - email considerado seguro por precaução",
+        reason: "Error in analysis - email considered safe by precaution",
         confidence: 0.5,
         threatLevel: "LOW",
         detectorUsed: detectorType,

@@ -66,7 +66,7 @@ export class SpamDetector {
     Required JSON format:
     {
       "is_spam": boolean,
-      "reason": "detailed explanation in Portuguese",
+      "reason": "detailed explanation in English",
       "confidence": float between 0.0 and 1.0
     }`;
   }
