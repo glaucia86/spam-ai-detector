@@ -9,7 +9,7 @@ This project came about after analyzing a Python spam detection code that had se
 
 You can see the project in action in the gif below:
 
-![](./resource/images/spam_detector_ai.gif)
+![](./resource/images/spam_detector_ai_01.gif)
 
 ## What was wrong with the original code?
 
