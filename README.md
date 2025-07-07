@@ -1,5 +1,7 @@
 # 🛡️ Spam E-mail AI Detector with LangChain.js & GitHub Models
 
+> Before you start, please give a ⭐️ to this repository if you find it useful! And **[open an issue](https://github.com/glaucia86/spam-ai-detector/issues)**if you have any questions or suggestions.
+
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)
@@ -9,6 +11,12 @@
 An advanced, production-ready spam detection system built with **[LangChain.js](https://js.langchain.com/docs/introduction/)**, **[Next.js](https://nextjs.org/)**, and **[GitHub Models](https://github.com/marketplace?type=models)**. Features multiple AI-powered detection algorithms, memory capabilities, caching, and a beautiful web interface.
 
 ![Project Demo](./resource/images/spam_detector_ai_01.gif)
+
+## Do you want to test the application?
+
+Click in the Codespaces button below to get started.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/glaucia86/spam-ai-detector)
 
 ## 🚀 Features
 
