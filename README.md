@@ -6,7 +6,6 @@
 ![GitHub](https://img.shields.io/badge/GitHub_Models-100000?style=for-the-badge&logo=github&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
----
 
 > Before you start, please give a ⭐️ to this repository if you find it useful! And **[open an issue](https://github.com/glaucia86/spam-ai-detector/issues)** if you have any questions or suggestions.
 
